@@ -19,7 +19,7 @@ const ELEMENT_ATTRS = {
   DRAG_KEY: 'drag_key'
 };
 
-export default function (Vue, options) {
+export default function (Vue, options = { autoSwap: false }) {
   const dragData = new DragData();
   let Current = null;
 
@@ -161,6 +161,19 @@ export default function (Vue, options) {
       return;
     }
 
+    if (el == Current.el) {
+      return;
+    }
+
+    domUtils.setStyle(
+      el,
+      dragStyles.dragOvering
+    );
+
+    if (!options.autoSwap) {
+      return;
+    }
+
     const key = el.getAttribute(ELEMENT_ATTRS.DRAG_GROUP);
     if (
       key != Current.group ||
@@ -196,6 +209,20 @@ export default function (Vue, options) {
    * 处理拖拽离开
    */
   function handleDragLeave(e) {
+    const el = getBlockEl(e.target);
+
+    if (!el) {
+      e.preventDefault();
+
+      return;
+    }
+
+    if (el !== Current.el) {
+      domUtils.resetStyle(
+        el,
+        dragStyles.dragOvering
+      );
+    }
   }
 
   /**
@@ -217,11 +244,11 @@ export default function (Vue, options) {
     }
 
     domUtils.resetStyle(
-      el,
-      dragStyles.dragging
+      Current.el,
+      dragStyles.dragOvering,
     );
-
     Current = null;
+
     const group = el.getAttribute(ELEMENT_ATTRS.DRAG_GROUP);
     $dragging.$emit('dragend', {
       group
@@ -232,11 +259,61 @@ export default function (Vue, options) {
    * 处理拖拽Drop
    */
   function handleDrop(e) {
-    e.preventDefault();
-    if (e.stopPropagation) {
-      e.stopPropagation();
+    const el = getBlockEl(e.target);
+
+    if (!el) {
+      e.preventDefault();
+
+      return;
     }
-    return false;
+
+    if (options.autoSwap) {
+      domUtils.resetStyle(
+        el,
+        dragStyles.dragOvering
+      );
+      return;
+    }
+
+    if (!el ||
+      !Current
+    ) {
+      return;
+    }
+
+    const key = el.getAttribute(ELEMENT_ATTRS.DRAG_GROUP);
+    if (
+      key != Current.group ||
+      !Current.el ||
+      !Current.item ||
+      el == Current.el
+    ) {
+      return;
+    }
+
+    domUtils.resetStyle(
+      Current.el,
+      dragStyles.dragging
+    );
+    domUtils.resetStyle(
+      el,
+      dragStyles.dragOvering
+    );
+
+    const dragKey = el.getAttribute(ELEMENT_ATTRS.DRAG_KEY);
+    const _dragData = dragData.new(key);
+    const item = _dragData.KEY_MAP[dragKey];
+    const indexTo = _dragData.list.indexOf(item);
+    const indexFrom = _dragData.list.indexOf(Current.item);
+    swapArrayElements(_dragData.list, indexFrom, indexTo);
+
+    Current.index = indexTo;
+    $dragging.$emit('dragged', {
+      dragged: Current.item,
+      to: item,
+      value: _dragData.value,
+      group: key
+    });
   }
 
   /**

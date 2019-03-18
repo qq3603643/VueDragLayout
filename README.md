@@ -13,7 +13,9 @@ vue拖动布局
     import Vue from 'vue';
     import DragToLayout from "vue-drag-layout";
 
-    Vue.use(DragToLayout);
+    // autoSwap: 当拖拽元素移动至目标位置时 是否自动交替位置
+    // 默认false
+    Vue.use(DragToLayout, { autoSwap: false });
   ```
 
   - 示例

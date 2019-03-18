@@ -1,0 +1,37 @@
+{
+  "name": "VueDragLayout",
+  "version": "1.0.0",
+  "description": "vue可拖拽布局",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack-cli"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qq3603643/VueDragLayout.git"
+  },
+  "keywords": [
+    "vue",
+    "drag",
+    "layout"
+  ],
+  "author": "tangerine",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qq3603643/VueDragLayout/issues"
+  },
+  "homepage": "https://github.com/qq3603643/VueDragLayout#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
+  }
+}

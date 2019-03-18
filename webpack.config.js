@@ -8,6 +8,10 @@ module.exports = {
   output: {
     path: resolve(__dirname, "dist"),
     filename: "index.js",
+    library: "vue-drag-layout",
+    libraryExport: "default",
+    globalObject: "this",
+    libraryTarget: "umd",
   },
   module: {
     rules: [

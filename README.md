@@ -25,11 +25,10 @@ vue拖动布局
           :key="index"
           :item="item"
           v-dragToLayout="{
-            group: "example",
+            group: 'example',
             list: list,
             item: item,
             // 可选，设置拖拽元素的可拖拽部分
-            //
             className: "drag-ele-class"
           }"
         ></li>

@@ -1,5 +1,5 @@
 {
-  "name": "VueDragLayout",
+  "name": "vue-drag-layout",
   "version": "1.0.0",
   "description": "vue可拖拽布局",
   "main": "dist/index.js",

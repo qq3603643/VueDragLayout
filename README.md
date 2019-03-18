@@ -1,17 +1,17 @@
-# VueDragLayout
+# vue-drag-layout
 vue拖动布局
 
 # 如何使用
   - 安装
   ```
-    npm install VueDragLayout --save-dep
+    npm install vue-drag-layout --save-dep
   ```
 
   - 引入
 
   ```
     import Vue from 'vue';
-    import DragToLayout from "VueDragLayout";
+    import DragToLayout from "vue-drag-layout";
 
     Vue.use(DragToLayout);
   ```

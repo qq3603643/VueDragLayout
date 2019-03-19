@@ -86,6 +86,23 @@ export default function (Vue, options = { autoSwap: false }) {
   }
 
   /**
+   * 元素是否属于当前拖拽分组
+   */
+  function eleIsInCurrentGroup(ele) {
+    if (
+      !ele ||
+      !Current ||
+      !Current.el ||
+      !Current.item ||
+      !Current.group
+    ) {
+      return false;
+    }
+
+    return ele.getAttribute(ELEMENT_ATTRS.DRAG_GROUP) == Current.group;
+  }
+
+  /**
    * 交换数组item
    */
   function swapArrayElements(items, indexFrom, indexTo) {
@@ -155,13 +172,10 @@ export default function (Vue, options = { autoSwap: false }) {
       return;
     }
 
-    if (!el ||
-      !Current
+    if (
+      !eleIsInCurrentGroup(el) ||
+      el == Current.el
     ) {
-      return;
-    }
-
-    if (el == Current.el) {
       return;
     }
 
@@ -175,15 +189,6 @@ export default function (Vue, options = { autoSwap: false }) {
     }
 
     const key = el.getAttribute(ELEMENT_ATTRS.DRAG_GROUP);
-    if (
-      key != Current.group ||
-      !Current.el ||
-      !Current.item ||
-      el == Current.el
-    ) {
-      return;
-    }
-
     const dragKey = el.getAttribute(ELEMENT_ATTRS.DRAG_KEY);
     const _dragData = dragData.new(key);
     const item = _dragData.KEY_MAP[dragKey];
@@ -217,12 +222,21 @@ export default function (Vue, options = { autoSwap: false }) {
       return;
     }
 
-    if (el !== Current.el) {
-      domUtils.resetStyle(
-        el,
-        dragStyles.dragOvering
-      );
+    if (el.contains(domUtils.getElementFromMouseEvent(e))) {
+      return;
     }
+
+    if (
+      !eleIsInCurrentGroup(el) ||
+      el == Current.el
+    ) {
+      return;
+    }
+
+    domUtils.resetStyle(
+      el,
+      dragStyles.dragOvering
+    );
   }
 
   /**
@@ -275,17 +289,8 @@ export default function (Vue, options = { autoSwap: false }) {
       return;
     }
 
-    if (!el ||
-      !Current
-    ) {
-      return;
-    }
-
-    const key = el.getAttribute(ELEMENT_ATTRS.DRAG_GROUP);
     if (
-      key != Current.group ||
-      !Current.el ||
-      !Current.item ||
+      !eleIsInCurrentGroup(el) ||
       el == Current.el
     ) {
       return;
@@ -300,6 +305,7 @@ export default function (Vue, options = { autoSwap: false }) {
       dragStyles.dragOvering
     );
 
+    const key = el.getAttribute(ELEMENT_ATTRS.DRAG_GROUP);
     const dragKey = el.getAttribute(ELEMENT_ATTRS.DRAG_KEY);
     const _dragData = dragData.new(key);
     const item = _dragData.KEY_MAP[dragKey];
